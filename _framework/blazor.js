@@ -519,7 +519,7 @@ function findMethod(assemblyName, namespace, className, methodName) {
 function addScriptTagsToDocument() {
     // Load either the wasm or asm.js version of the Mono runtime
     var browserSupportsNativeWebAssembly = typeof WebAssembly !== 'undefined' && WebAssembly.validate;
-    var monoRuntimeUrlBase = '_framework/' + (browserSupportsNativeWebAssembly ? 'wasm' : 'asmjs');
+    var monoRuntimeUrlBase = '/BlazeDown/_framework/' + (browserSupportsNativeWebAssembly ? 'wasm' : 'asmjs');
     var monoRuntimeScriptUrl = monoRuntimeUrlBase + "/mono.js";
     if (!browserSupportsNativeWebAssembly) {
         // In the asmjs case, the initial memory structure is in a separate file we need to download
