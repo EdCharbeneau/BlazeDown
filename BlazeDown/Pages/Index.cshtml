@@ -16,9 +16,11 @@
 
 @functions {
     public string ContentValue { get; set; }
-    void OnContentChanged(string myValue)
+
+    // Two-way data-binding doesn't seem to work, so I had to manually update ContentValue
+    void OnContentChanged(string newValue)
     {
-        ContentValue = myValue;
+        ContentValue = newValue;
         StateHasChanged();
     }
 }
