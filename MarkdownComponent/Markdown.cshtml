@@ -40,7 +40,6 @@ else
                 "Content or FromUrl property is not set or invalid" : await InitContentFromUrl();
         isComponentInitialized = true;
         ContentChanged(Content);
-        StateHasChanged();
     }
 
     private async Task<string> InitContentFromUrl()
