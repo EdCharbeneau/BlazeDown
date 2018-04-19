@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Blazor.Browser.Interop;
 
 namespace MarkdownComponent
 {
-    public class ExampleJsInterop
+    public class HtmlRendererInterop
     {
-        public static string Prompt(string message)
+        public static string RenderMarkdownAsHtml(string htmlContent)
         {
             return RegisteredFunction.Invoke<string>(
-                "MarkdownComponent.ExampleJsInterop.Prompt",
-                message);
+                "MarkdownComponent.HtmlRendererInterop.RenderMarkdown",
+                htmlContent);
         }
     }
 }
