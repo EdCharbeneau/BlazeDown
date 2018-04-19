@@ -340,7 +340,7 @@ function boot() {
                     }
                     loadAssemblyUrls = [entryPointDll]
                         .concat(referenceAssemblies)
-                        .map(function (filename) { return "_framework/_bin/" + filename; });
+                        .map(function (filename) { return "/BlazeDown/_framework/_bin/" + filename; });
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
