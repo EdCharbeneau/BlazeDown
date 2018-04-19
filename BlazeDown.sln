@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27617.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkdownComponent", "MarkdownComponent\MarkdownComponent.csproj", "{AD4B0C5F-E32A-4DF1-B626-B2E4E726F8BF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazeDown", "BlazeDown\BlazeDown.csproj", "{C1C06EE0-F0A2-495E-9E29-E4BD1901A7BA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD4B0C5F-E32A-4DF1-B626-B2E4E726F8BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD4B0C5F-E32A-4DF1-B626-B2E4E726F8BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD4B0C5F-E32A-4DF1-B626-B2E4E726F8BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD4B0C5F-E32A-4DF1-B626-B2E4E726F8BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1C06EE0-F0A2-495E-9E29-E4BD1901A7BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1C06EE0-F0A2-495E-9E29-E4BD1901A7BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1C06EE0-F0A2-495E-9E29-E4BD1901A7BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1C06EE0-F0A2-495E-9E29-E4BD1901A7BA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9C2BE63E-CE8B-4228-A326-0229F288D090}
+	EndGlobalSection
+EndGlobal

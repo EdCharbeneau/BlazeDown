@@ -1,0 +1,58 @@
+﻿@using Markdig;
+@using Markdig.Extensions;
+@using System.Web;
+@using System.Net.Http;
+@inject HttpClient Http
+
+@if (Content == null)
+{
+    <span>Loading...</span>
+}
+else
+{
+    <div id="markdown-component">
+        <img src="" onerror="(function (e) { e.parentElement.innerHTML = '@HttpUtility.JavaScriptStringEncode(RenderHtmlContent(content))'; })(this)" />
+    </div>
+}
+
+
+@functions {
+
+    private string content;
+    private bool isComponentInitialized = false;
+    public string Content
+    {
+        get { return content; }
+        set
+        {
+            content = value;
+            if(isComponentInitialized)
+                ExampleJsInterop.Prompt(RenderHtmlContent(value));
+        }
+    }
+    public string FromUrl { get; set; }
+    public Action<string> ContentChanged { get; set; }
+
+    protected override async Task OnInitAsync()
+    {
+        if (Content == null)
+            Content = String.IsNullOrEmpty(FromUrl) ?
+                "Content or FromUrl property is not set or invalid" : await InitContentFromUrl();
+        isComponentInitialized = true;
+        ContentChanged(Content);
+        StateHasChanged();
+    }
+
+    private async Task<string> InitContentFromUrl()
+    {
+        HttpResponseMessage httpResponse = await Http.GetAsync(FromUrl);
+        return httpResponse.IsSuccessStatusCode ?
+        await httpResponse.Content.ReadAsStringAsync() : httpResponse.ReasonPhrase;
+    }
+
+    private string RenderHtmlContent(string value) => Markdig.Markdown.ToHtml(
+    markdown: value,
+    pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
+    );
+
+}

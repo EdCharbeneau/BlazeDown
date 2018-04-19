@@ -1,0 +1,24 @@
+﻿@page "/"
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="markdown-editor">
+            <textarea bind="@ContentValue" />
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="markdown-view">
+            <Markdown Content="@ContentValue" ContentChanged="@OnContentChanged" FromUrl="/sample-data/example.md"></Markdown>
+        </div>
+    </div>
+</div>
+
+
+@functions {
+    public string ContentValue { get; set; }
+    void OnContentChanged(string myValue)
+    {
+        ContentValue = myValue;
+        StateHasChanged();
+    }
+}

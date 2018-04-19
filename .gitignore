@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/BlazeDown
+/BlazeDown/bin/Debug/netstandard2.0
+/BlazeDown/obj
+/BlazeDown/Properties
+/MarkdownComponent/bin/Debug/netstandard2.0
+/MarkdownComponent/obj
+/MarkdownComponent/Properties
