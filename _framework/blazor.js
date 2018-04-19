@@ -532,8 +532,8 @@ function addScriptTagsToDocument() {
 }
 function createEmscriptenModuleInstance(loadAssemblyUrls, onReady, onError) {
     var module = {};
-    var wasmBinaryFile = '_framework/wasm/mono.wasm';
-    var asmjsCodeFile = '_framework/asmjs/mono.asm.js';
+    var wasmBinaryFile = '/BlazeDown/_framework/wasm/mono.wasm';
+    var asmjsCodeFile = '/BlazeDown/_framework/asmjs/mono.asm.js';
     module.print = function (line) { return console.log("WASM: " + line); };
     module.printErr = function (line) { return console.error("WASM: " + line); };
     module.preRun = [];
