@@ -1,4 +1,4 @@
-﻿# BlazeDown
+# BlazeDown
 
 Blazor + Markdown = BlazeDown!
 
@@ -6,7 +6,7 @@ Blazor + Markdown = BlazeDown!
 
 This is a proof of concept using [Blazor](https://blogs.msdn.microsoft.com/webdev/2018/04/17/blazor-0-2-0-release-now-available/) to create an online Markdown editor.
 
-This experiment is in no way intented to be a product, or example of best practices. It's here because it *it's possible* and that's all.
+This experiment is in no way intended to be a product, or example of best practices. It's here because it *it's possible* and that's all.
 
 ## Client Side C#
 
@@ -16,44 +16,44 @@ Thanks to Blazor the app requires no plugins, this is because the code is compil
 
 ## Building BlazeDown
 
-This experiment was to test out Blazor and see how easy (or difficult) it was to use a .NET Standard library on the client. The beauty of BlazeDown is that writing a Markdown parser was completely unecessary because one already existed for .NET.
+This experiment was to test out Blazor and see how easy (or difficult) it was to use a .NET Standard library on the client. The beauty of BlazeDown is that writing a Markdown parser was completely unnecessary because one already existed for .NET.
 
 ## The Markdown Processor
 
-BlazeDown takes advatnage of the .NET ecosystem. It uses the [MarkDig](https://www.nuget.org/packages/Markdig/) an extensible Markdown processor for .NET. Since MarkDig is compatiable with .NET Standard 1.1+ it worked flawlessly with Blazor. Having the freedom to reuse existing .NET libraries on the client is in my opinion what makes Blazor an iteresting option for developoers.
+BlazeDown takes advantage of the .NET ecosystem. It uses the [MarkDig](https://www.nuget.org/packages/Markdig/) an extensible Markdown processor for .NET. Since MarkDig is compatible with .NET Standard 1.1+ it worked flawlessly with Blazor. Having the freedom to reuse existing .NET libraries on the client is in my opinion what makes Blazor an interesting option for developers.
 
 Utilizing MarkDig in Blazor followed the standard procedure of grabbing the package from [NuGet](https://www.nuget.org). Once the package was installed, MarkDig is initialize just as it would be in any other .NET application.
 
 Simply calling MarkDig's `ToHtml` method converts a `string` into Html.
 
 ```
-	@using Markdig;
+@using Markdig;
 
-    private string RenderHtmlContent(string value) => Markdig.Markdown.ToHtml(
-    markdown: value,
-    pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
-    );
+private string RenderHtmlContent(string value) => Markdig.Markdown.ToHtml(
+markdown: value,
+pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
+);
 ```
 To complete the experiment Blazor was used to load Markdown _.md_ files externally. Once again .NET was leveraged to add the feature without directly jumping into JavaScript by using `System.Net.Http` and `Http.GetAsync`.
 
 The code for using `Http.GetAsync` is quite similar to how it would be used in a typical .NET application. An HttpResponseMessage is created to make the call to the resource using `GetAsync`. Once the response returns, we check to see if the response was successful using `httpResponse.IsSuccessStatusCode`. Finally, the resulting markdown file is returned, or a error message is passed along `await httpResponse.Content.ReadAsStringAsync() : httpResponse.ReasonPhrase`.
 
-While these are all quite famailiar routines, it's worth noting that some abstractions may be present in Blazor to invoke JavaScript under the hood to make the actual Http request.
+While these are all quite familiar routines, it's worth noting that some abstractions may be present in Blazor to invoke JavaScript under the hood to make the actual Http request.
 
 ```
-    protected override async Task OnInitAsync()
-    {
-        if (Content == null)
-            Content = String.IsNullOrEmpty(FromUrl) ?
-                "Content or FromUrl property is not set or invalid" : await InitContentFromUrl();
-    }
+protected override async Task OnInitAsync()
+{
+    if (Content == null)
+        Content = String.IsNullOrEmpty(FromUrl) ?
+            "Content or FromUrl property is not set or invalid" : await InitContentFromUrl();
+}
 
-    private async Task<string> InitContentFromUrl()
-    {
-        HttpResponseMessage httpResponse = await Http.GetAsync(FromUrl);
-        return httpResponse.IsSuccessStatusCode ?
-        await httpResponse.Content.ReadAsStringAsync() : httpResponse.ReasonPhrase;
-    }
+private async Task<string> InitContentFromUrl()
+{
+    HttpResponseMessage httpResponse = await Http.GetAsync(FromUrl);
+    return httpResponse.IsSuccessStatusCode ?
+    await httpResponse.Content.ReadAsStringAsync() : httpResponse.ReasonPhrase;
+}
 ```
 ### The Component
 
@@ -121,7 +121,7 @@ The code above represents the **ideal** code for the component.
 
 ### The Bad Parts
 
-The ideal code mentioned above requried quite a few hacks, remember that this is a 0.2.0 release and Blazor is very early in development. Browsing the source code on GitHub will reveal that much more is going on behind the scense.
+The ideal code mentioned above required quite a few hacks, remember that this is a 0.2.0 release and Blazor is very early in development. Browsing the source code on GitHub will reveal that much more is going on behind the scenes.
 
 **Rendering Raw HTML**
 
@@ -130,28 +130,28 @@ The first major issue is that Raw Html cannot be rendered with Blazor. This mean
 First, an ugly hack is needed to display the HTML when the component is initialized. Since the DOM hasn't rendered yet, we can't even properly use JavaScript to combat this issue. The actual code attaches to the `onerror` event of an image to forcing the HTML to render via JavaScript.
 
 ```
-    // This is a totally hacky way to get HTML injected on the page until https://github.com/aspnet/Blazor/issues/167 is resolved
-    <div>
-        <img src="" onerror="(function (e) { e.parentElement.innerHTML = '@HttpUtility.JavaScriptStringEncode(RenderHtmlContent())'; })(this)" />
-    </div>
+// This is a totally hacky way to get HTML injected on the page until https://github.com/aspnet/Blazor/issues/167 is resolved
+<div>
+    <img src="" onerror="(function (e) { e.parentElement.innerHTML = '@HttpUtility.JavaScriptStringEncode(RenderHtmlContent())'; })(this)" />
+</div>
 ```
 
 Second, when the `Content` property is set, JavaScript is called via interop to find our component's container to render the HTML directly to the DOM.
 
 ```
-    public string Content
+public string Content
+{
+    get { return content; }
+    set
     {
-        get { return content; }
-        set
-        {
-            content = value;
-            if(isComponentInitialized)
-                // Once this issue is fixed https://github.com/aspnet/Blazor/issues/167
-                // then the interop will no longer be needed. This will also take care of that lame <img hack in the markup above.
-                // Once raw HTML output is available, the component will simply use RenderHtmlContent function directly from Razor.
-                HtmlRendererInterop.RenderMarkdownAsHtml(RenderHtmlContent(value));
-        }
+        content = value;
+        if(isComponentInitialized)
+            // Once this issue is fixed https://github.com/aspnet/Blazor/issues/167
+            // then the interop will no longer be needed. This will also take care of that lame <img hack in the markup above.
+            // Once raw HTML output is available, the component will simply use RenderHtmlContent function directly from Razor.
+            HtmlRendererInterop.RenderMarkdownAsHtml(RenderHtmlContent(value));
     }
+}
 ```
 
 ```
@@ -170,7 +170,7 @@ While ugly and quite cool at the same time, it's necessary. Blazor still has a l
 
 ### Data Binding in Blazor
 
-In addition to the rendering hacks, data binding is still quite new and changing in 0.2.0. Data binding works in Blazor by simple conventions that are quite easy to understand and implment.
+In addition to the rendering hacks, data binding is still quite new and changing in 0.2.0. Data binding works in Blazor by simple conventions that are quite easy to understand and implement.
 
 Here's the example shown in the MSDN article celebrating the [0.2.0 release](https://blogs.msdn.microsoft.com/webdev/2018/04/17/blazor-0-2-0-release-now-available/).
 
@@ -217,11 +217,12 @@ It's worth noting that the data binding in current release don't use the convent
         ContentValue = newValue;
         StateHasChanged();
     }
+}
 ```
 ## Conclusion
 
 Blazor is quite an amazing idea and worthy experiment. It's exciting to see how easy it was to create an experiment like BlazeDown. Using mostly C# and existing .NET libraries, a client-side Markdown editor was created with minimal effort.
 
-While Blazor clearly has flaws, **as one would expect from an early in development experiment**, if Blazor was a matured product and the hacks shown above were not necessary the entire process of creating BlazeDown would have been simple and straight forward. Even with the inconvinences mentioned above, the BlazeDown experiment is quite a success.
+While Blazor clearly has flaws, **as one would expect from an early in development experiment**, if Blazor was a matured product and the hacks shown above were not necessary the entire process of creating BlazeDown would have been simple and straight forward. Even with the inconveniences mentioned above, the BlazeDown experiment is quite a success.
 
-It's exciting to see Blazor being built. The community is experimenting right along side the dev team providing feedback, issues and pullrequets on [the Blazor GitHub repo](https://github.com/aspnet/Blazor).
+It's exciting to see Blazor being built. The community is experimenting right along side the dev team providing feedback, issues and pull request on [the Blazor GitHub repo](https://github.com/aspnet/Blazor).
