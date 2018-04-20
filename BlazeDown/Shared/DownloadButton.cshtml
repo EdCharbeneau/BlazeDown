@@ -1,0 +1,8 @@
+﻿<a href="@Download" download="@FileName" class="btn btn-info">@Text</a>
+
+@functions {
+    public string Payload { get; set; }
+    public string FileName { get; set; }
+    public string Text { get; set; }
+    public string Download => $"data:text/plain;charset=utf-8,{Payload}";
+}

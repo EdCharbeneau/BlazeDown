@@ -17,4 +17,16 @@
     <ProjectReference Include="..\MarkdownComponent\MarkdownComponent.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Shared\DownloadButton.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BlazorGenerate Remove="Shared\DownloadButton.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BlazorGenerate Remove="Shared\NavBar.cshtml" />
+  </ItemGroup>
+
 </Project>
