@@ -1,4 +1,4 @@
-﻿# BlazeDown
+﻿# BlazeDown 2
 
 Blazor + Markdown = BlazeDown!
 
