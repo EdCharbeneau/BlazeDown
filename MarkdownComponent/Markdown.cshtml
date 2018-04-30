@@ -10,27 +10,27 @@
 }
 else
 {
-    <div id="markdown-component">
-        <img src="" onerror="(function (e) { e.parentElement.innerHTML = '@HttpUtility.JavaScriptStringEncode(RenderHtmlContent(content))'; })(this)" />
+    <div id="@uniqueId">
+        <RawHtml HtmlContent="@RenderHtmlContent(Content)"></RawHtml>
     </div>
 }
 
 
 @functions {
 
+    private string uniqueId = Guid.NewGuid().ToString();
+
     private string content;
     private bool isComponentInitialized = false;
+
     public string Content
     {
         get { return content; }
         set
         {
             content = value;
-            if(isComponentInitialized)
-                // Once this issue is fixed https://github.com/aspnet/Blazor/issues/167
-                // then the interop will no longer be needed. This will also take care of that lame <img hack in the markup above.
-                // Once raw HTML output is available, the component will simply use RenderHtmlContent function directly from Razor.
-                HtmlRendererInterop.RenderMarkdownAsHtml(RenderHtmlContent(value));
+            if (isComponentInitialized)
+                HtmlRendererInterop.ReplaceInnerHtml(uniqueId, RenderHtmlContent(value));
         }
     }
     public string FromUrl { get; set; }
@@ -41,7 +41,7 @@ else
         if (Content == null)
             Content = String.IsNullOrEmpty(FromUrl) ?
                 "Content or FromUrl property is not set or invalid" : await InitContentFromUrl();
-        isComponentInitialized = true; // Checking for the component to be initialized before attempting to run the interop. Remove after issue #167 is resolved.
+        isComponentInitialized = true;
         ContentChanged(Content);
     }
 

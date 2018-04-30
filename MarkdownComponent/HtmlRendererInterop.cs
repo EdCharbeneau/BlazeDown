@@ -5,11 +5,7 @@ namespace MarkdownComponent
 {
     public class HtmlRendererInterop
     {
-        public static string RenderMarkdownAsHtml(string htmlContent)
-        {
-            return RegisteredFunction.Invoke<string>(
-                "MarkdownComponent.HtmlRendererInterop.RenderMarkdown",
-                htmlContent);
-        }
+        public static string ReplaceInnerHtml(string elementId, string htmlContent) =>
+         RegisteredFunction.Invoke<string>("MarkdownComponent.HtmlRendererInterop.ReplaceInnerHtml", elementId, htmlContent);
     }
 }

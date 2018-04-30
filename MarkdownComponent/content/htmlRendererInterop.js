@@ -1,11 +1,6 @@
-﻿// This file is to show how a library package may provide JavaScript interop features
-// wrapped in a .NET API
-
-Blazor.registerFunction('MarkdownComponent.HtmlRendererInterop.RenderMarkdown', function (message) {
+﻿Blazor.registerFunction('MarkdownComponent.HtmlRendererInterop.ReplaceInnerHtml', function (elementId, innerHtml) {
    
-    let el = document.getElementById("markdown-component");
-    if (el) { el.innerHTML = message; }
-    else {
-        console.log("HTML not rendered");
-    }
+    let el = document.getElementById(elementId);
+    if (el) { el.innerHTML = innerHtml; }
+    
 });
