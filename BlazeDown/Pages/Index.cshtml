@@ -27,7 +27,7 @@
             <div class="col-sm-6">
                 <span class="label label-default label-hint">HTML Preview</span>
                 <div class="markdown-view">
-                    <Markdown Content="@ContentValue" ContentChanged="@OnContentChanged" FromUrl="/sample-data/example.md"></Markdown>
+                    <Markdown Content="@ContentValue"></Markdown>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
 @functions {
 
     public string FileUrl { get; set; }
-    public string ContentValue { get; set; }
+    public string ContentValue { get; set; } = "# Hello";
     public string Download => $"data:text/plain;charset=utf-8,{ContentValue}";
 
     private async void OnClicked(UIMouseEventArgs e)

@@ -1,7 +1,10 @@
 ﻿@using Markdig;
-@using Markdig.Extensions;
-@using System.Web;
+@using HtmlAgilityPack;
 @using System.Net.Http;
+@using Microsoft.AspNetCore.Blazor;
+@using Microsoft.AspNetCore.Blazor.RenderTree;
+
+
 @inject HttpClient Http
 
 @if (Content == null)
@@ -10,51 +13,69 @@
 }
 else
 {
-    <div id="@uniqueId">
-        <RawHtml HtmlContent="@RenderHtmlContent(Content)"></RawHtml>
-    </div>
+    @DynamicHtml
 }
 
 
 @functions {
 
-    private string uniqueId = Guid.NewGuid().ToString();
+public string Content { get; set; }
+public RenderFragment DynamicHtml { get; set; }
 
-    private string content;
-    private bool isComponentInitialized = false;
+protected override void OnInit()
+{
+    RenderHtml();
+}
 
-    public string Content
+private void RenderHtml()
+{
+    DynamicHtml = null;
+    DynamicHtml = builder =>
     {
-        get { return content; }
-        set
-        {
-            content = value;
-            if (isComponentInitialized)
-                HtmlRendererInterop.ReplaceInnerHtml(uniqueId, RenderHtmlContent(value));
-        }
-    }
-    public string FromUrl { get; set; }
-    public Action<string> ContentChanged { get; set; }
+        var HtmlContent = BuildHtmlFromMarkdown(Content);
+        if (HtmlContent == null) return;
+        var htmlDoc = new HtmlDocument();
+        htmlDoc.LoadHtml(HtmlContent);
 
-    protected override async Task OnInitAsync()
-    {
-        if (Content == null)
-            Content = String.IsNullOrEmpty(FromUrl) ?
-                "Content or FromUrl property is not set or invalid" : await InitContentFromUrl();
-        isComponentInitialized = true;
-        ContentChanged(Content);
-    }
+        var htmlBody = htmlDoc.DocumentNode;
+        Decend(htmlBody, builder);
+    };
+}
 
-    private async Task<string> InitContentFromUrl()
-    {
-        HttpResponseMessage httpResponse = await Http.GetAsync(FromUrl);
-        return httpResponse.IsSuccessStatusCode ?
-        await httpResponse.Content.ReadAsStringAsync() : httpResponse.ReasonPhrase;
-    }
-
-    private string RenderHtmlContent(string value) => Markdig.Markdown.ToHtml(
+private string BuildHtmlFromMarkdown(string value) => Markdig.Markdown.ToHtml(
     markdown: value,
     pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
-    );
+);
+
+
+private void Decend(HtmlNode ds, RenderTreeBuilder b)
+{
+    foreach (var nNode in ds.ChildNodes)
+    {
+        if (nNode.HasChildNodes)
+        {
+            if (nNode.NodeType == HtmlNodeType.Element)
+                b.OpenElement(0, nNode.Name);
+            if (nNode.HasAttributes) Attributes(nNode, b);
+            Decend(nNode, b);
+            b.CloseElement();
+        }
+        else
+        {
+            if (nNode.NodeType == HtmlNodeType.Text)
+            {
+                b.AddContent(0, nNode.InnerText);
+            }
+        }
+    }
+}
+
+private void Attributes(HtmlNode n, RenderTreeBuilder b)
+{
+    foreach (var a in n.Attributes)
+    {
+        b.AddAttribute(0, a.Name, a.Value);
+    }
+}
 
 }
