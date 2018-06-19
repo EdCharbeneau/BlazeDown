@@ -5,7 +5,7 @@ using System;
 
 namespace BlazeDown
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {

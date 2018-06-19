@@ -4,29 +4,26 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RunCommand>dotnet</RunCommand>
     <RunArguments>blazor serve</RunArguments>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.0-preview2-final" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.2.0" />
-    <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.4.0" />
+    <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    <None Include="wwwroot\css\open-iconic\FONT-LICENSE" />
+    <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
+    <None Include="wwwroot\css\open-iconic\ICON-LICENSE" />
+    <None Include="wwwroot\css\open-iconic\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DownloadComponents\DownloadComponents.csproj" />
     <ProjectReference Include="..\MarkdownComponent\MarkdownComponent.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Shared\DownloadButton.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <BlazorGenerate Remove="Shared\DownloadButton.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <BlazorGenerate Remove="Shared\NavBar.cshtml" />
   </ItemGroup>
 
 </Project>

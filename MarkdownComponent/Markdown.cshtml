@@ -19,63 +19,64 @@ else
 
 @functions {
 
-public string Content { get; set; }
-public RenderFragment DynamicHtml { get; set; }
+    [Parameter] string Content { get; set; }
 
-protected override void OnInit()
-{
-    RenderHtml();
-}
+    RenderFragment DynamicHtml { get; set; }
 
-private void RenderHtml()
-{
-    DynamicHtml = null;
-    DynamicHtml = builder =>
+    protected override void OnInit()
     {
-        var HtmlContent = BuildHtmlFromMarkdown(Content);
-        if (HtmlContent == null) return;
-        var htmlDoc = new HtmlDocument();
-        htmlDoc.LoadHtml(HtmlContent);
+        RenderHtml();
+    }
 
-        var htmlBody = htmlDoc.DocumentNode;
-        Decend(htmlBody, builder);
-    };
-}
-
-private string BuildHtmlFromMarkdown(string value) => Markdig.Markdown.ToHtml(
-    markdown: value,
-    pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
-);
-
-
-private void Decend(HtmlNode ds, RenderTreeBuilder b)
-{
-    foreach (var nNode in ds.ChildNodes)
+    private void RenderHtml()
     {
-        if (nNode.HasChildNodes)
+        DynamicHtml = null;
+        DynamicHtml = builder =>
         {
-            if (nNode.NodeType == HtmlNodeType.Element)
-                b.OpenElement(0, nNode.Name);
-            if (nNode.HasAttributes) Attributes(nNode, b);
-            Decend(nNode, b);
-            b.CloseElement();
-        }
-        else
+            var HtmlContent = BuildHtmlFromMarkdown(Content);
+            if (HtmlContent == null) return;
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(HtmlContent);
+
+            var htmlBody = htmlDoc.DocumentNode;
+            Decend(htmlBody, builder);
+        };
+    }
+
+    private string BuildHtmlFromMarkdown(string value) => Markdig.Markdown.ToHtml(
+        markdown: value,
+        pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
+    );
+
+
+    private void Decend(HtmlNode ds, RenderTreeBuilder b)
+    {
+        foreach (var nNode in ds.ChildNodes)
         {
-            if (nNode.NodeType == HtmlNodeType.Text)
+            if (nNode.HasChildNodes)
             {
-                b.AddContent(0, nNode.InnerText);
+                if (nNode.NodeType == HtmlNodeType.Element)
+                    b.OpenElement(0, nNode.Name);
+                if (nNode.HasAttributes) Attributes(nNode, b);
+                Decend(nNode, b);
+                b.CloseElement();
+            }
+            else
+            {
+                if (nNode.NodeType == HtmlNodeType.Text)
+                {
+                    b.AddContent(0, nNode.InnerText);
+                }
             }
         }
     }
-}
 
-private void Attributes(HtmlNode n, RenderTreeBuilder b)
-{
-    foreach (var a in n.Attributes)
+    private void Attributes(HtmlNode n, RenderTreeBuilder b)
     {
-        b.AddAttribute(0, a.Name, a.Value);
+        foreach (var a in n.Attributes)
+        {
+            b.AddAttribute(0, a.Name, a.Value);
+        }
     }
-}
 
 }

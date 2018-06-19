@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <OutputType>library</OutputType>
+    <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
     <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,15 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.8.1" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.8.4" />
     <PackageReference Include="Markdig" Version="0.15.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.0-preview2-final" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <BlazorGenerate Remove="Markdown.cshtml" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.4.0" />
   </ItemGroup>
 
 </Project>

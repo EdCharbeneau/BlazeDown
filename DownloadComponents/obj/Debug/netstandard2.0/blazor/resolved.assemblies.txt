@@ -1,0 +1,23 @@
+C:\Users\edcha\source\repos\BlazeDown\DownloadComponents\obj\Debug\netstandard2.0\DownloadComponents.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.browser\0.4.0\lib\netstandard2.0\Microsoft.AspNetCore.Blazor.Browser.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor\0.4.0\lib\netstandard2.0\Microsoft.AspNetCore.Blazor.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/Facades/netstandard.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.Xml.Linq.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.Core.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.Xml.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/mscorlib.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/Mono.Security.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.Web.Services.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.Transactions.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.Runtime.Serialization.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.ServiceModel.Internals.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.Numerics.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.Net.Http.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.ComponentModel.Composition.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.IO.Compression.FileSystem.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.IO.Compression.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.Drawing.dll
+C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.build\0.4.0\targets\../tools/mono/bcl/System.Data.dll
+C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.dependencyinjection\2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\edcha\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
