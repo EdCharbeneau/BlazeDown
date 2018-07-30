@@ -35,39 +35,40 @@
 </div>
 @functions {
 
-public string FileUrl { get; set; }
-public string ContentValue { get; set; }
+    public string FileUrl { get; set; }
+    public string ContentValue { get; set; }
 
-protected async override Task OnInitAsync()
-{
-    ContentValue = await GetContentFromUrl("/sample-data/example.md");
-}
+    protected async override Task OnInitAsync()
+    {
+        ContentValue = await GetContentFromUrl("/sample-data/example.md");
+        StateHasChanged();
+    }
 
-private async void OnClicked(UIMouseEventArgs e)
-{
-    ContentValue = await GetContentFromUrl(FileUrl);
-    StateHasChanged();
-}
+    private async void OnClicked(UIMouseEventArgs e)
+    {
+        ContentValue = await GetContentFromUrl(FileUrl);
+        StateHasChanged();
+    }
 
-private async Task<string> GetContentFromUrl(string path)
-{
-    HttpResponseMessage httpResponse = await Http.GetAsync(path);
-    return httpResponse.IsSuccessStatusCode ?
-    await httpResponse.Content.ReadAsStringAsync() : httpResponse.ReasonPhrase;
-}
+    private async Task<string> GetContentFromUrl(string path)
+    {
+        HttpResponseMessage httpResponse = await Http.GetAsync(path);
+        return httpResponse.IsSuccessStatusCode ?
+        await httpResponse.Content.ReadAsStringAsync() : httpResponse.ReasonPhrase;
+    }
 
-// using bind-Property causes Blazor language services to crash.
-// Two-way data-binding doesn't seem to work, so I had to manually update ContentValue
-// https://github.com/aspnet/Blazor/issues/610
-void OnContentChanged(string newValue)
-{
-    ContentValue = newValue;
-    StateHasChanged();
-}
+    // using bind-Property causes Blazor language services to crash.
+    // Two-way data-binding doesn't seem to work, so I had to manually update ContentValue
+    // https://github.com/aspnet/Blazor/issues/610
+    void OnContentChanged(string newValue)
+    {
+        ContentValue = newValue;
+        StateHasChanged();
+    }
 
-// ContentChanged textarea should bind to onkeyup instead of onchange, however this is not supported yet.
-// As a result, the user needs to change the focus away from the textarea to invoke a change.
-// Interops could probably be used as a fix, but this is an experiment to use Blazor as much as possible without them.
-// Opinion: If I have to use interops this much, I might as well use JavaScript. We're at version 0.2.0, so no worries, this is just an observation.
+    // ContentChanged textarea should bind to onkeyup instead of onchange, however this is not supported yet.
+    // As a result, the user needs to change the focus away from the textarea to invoke a change.
+    // Interops could probably be used as a fix, but this is an experiment to use Blazor as much as possible without them.
+    // Opinion: If I have to use interops this much, I might as well use JavaScript. We're at version 0.2.0, so no worries, this is just an observation.
 
 }

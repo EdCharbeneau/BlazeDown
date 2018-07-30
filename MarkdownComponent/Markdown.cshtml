@@ -1,8 +1,6 @@
 ﻿@using Markdig;
-@using HtmlAgilityPack;
 @using System.Net.Http;
 @using Microsoft.AspNetCore.Blazor;
-@using Microsoft.AspNetCore.Blazor.RenderTree;
 
 
 @inject HttpClient Http
@@ -13,71 +11,16 @@
 }
 else
 {
-    @DynamicHtml
+    @((MarkupString)BuildHtmlFromMarkdown(Content))
 }
-
 
 @functions {
 
     [Parameter]
     string Content { get; set; }
 
-    RenderFragment DynamicHtml { get; set; }
-
-    protected override void OnInit()
-    {
-        RenderHtml();
-    }
-
-    private void RenderHtml()
-    {
-        DynamicHtml = null;
-        DynamicHtml = builder =>
-        {
-            var HtmlContent = BuildHtmlFromMarkdown(Content);
-            if (HtmlContent == null) return;
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(HtmlContent);
-
-            var htmlBody = htmlDoc.DocumentNode;
-            Decend(htmlBody, builder);
-        };
-    }
-
     private string BuildHtmlFromMarkdown(string value) => Markdig.Markdown.ToHtml(
         markdown: value,
         pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
     );
-
-
-    private void Decend(HtmlNode ds, RenderTreeBuilder b)
-    {
-        foreach (var nNode in ds.ChildNodes)
-        {
-            if (nNode.HasChildNodes)
-            {
-                if (nNode.NodeType == HtmlNodeType.Element)
-                    b.OpenElement(0, nNode.Name);
-                if (nNode.HasAttributes) Attributes(nNode, b);
-                Decend(nNode, b);
-                b.CloseElement();
-            }
-            else
-            {
-                if (nNode.NodeType == HtmlNodeType.Text)
-                {
-                    b.AddContent(0, nNode.InnerText);
-                }
-            }
-        }
-    }
-
-    private void Attributes(HtmlNode n, RenderTreeBuilder b)
-    {
-        foreach (var a in n.Attributes)
-        {
-            b.AddAttribute(0, a.Name, a.Value);
-        }
-    }
-
 }
