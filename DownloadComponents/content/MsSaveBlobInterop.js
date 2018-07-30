@@ -1,4 +1,4 @@
-﻿Blazor.registerFunction('DownloadComponents.MsSaveBlobInterop.MsSaveBlob', function (payload, filename) {
+﻿window.MsSaveBlob = function (payload, filename) {
 
     const createBlob = data => new Blob([data], { type: "text/csv;charset=utf-8;" });
 
@@ -21,4 +21,4 @@
         isHtmlDownloadAllowed ? invokeDownload(buildDownloadLink(createBlob(payload), filename)) :
             console.log("Feature unsupported");
 
-})
+};

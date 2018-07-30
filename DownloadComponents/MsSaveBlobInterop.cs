@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.AspNetCore.Blazor.Browser.Interop;
+using Microsoft.JSInterop;
 
 namespace DownloadComponents
 {
@@ -7,8 +7,7 @@ namespace DownloadComponents
     {
         public static void MsSaveBlob(string payload, string filename)
         {
-            RegisteredFunction.Invoke<string>("DownloadComponents.MsSaveBlobInterop.MsSaveBlob",
-                payload, filename);
+            JSRuntime.Current.InvokeAsync<string>("MsSaveBlob", payload, filename);
         }
     }
 }
