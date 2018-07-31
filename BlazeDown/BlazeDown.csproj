@@ -26,4 +26,10 @@
     <ProjectReference Include="..\MarkdownComponent\MarkdownComponent.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Shared\Editor.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>

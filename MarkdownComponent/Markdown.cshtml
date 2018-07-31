@@ -2,7 +2,6 @@
 @using System.Net.Http;
 @using Microsoft.AspNetCore.Blazor;
 
-
 @inject HttpClient Http
 
 @if (Content == null)
@@ -16,11 +15,12 @@ else
 
 @functions {
 
-    [Parameter]
-    string Content { get; set; }
+[Parameter]
+string Content { get; set; }
 
-    private string BuildHtmlFromMarkdown(string value) => Markdig.Markdown.ToHtml(
-        markdown: value,
-        pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
-    );
+private string BuildHtmlFromMarkdown(string value) => Markdig.Markdown.ToHtml(
+    markdown: value,
+    pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
+);
+
 }

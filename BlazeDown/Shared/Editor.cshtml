@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNetCore.Blazor;
+@using Microsoft.AspNetCore.Blazor.Components;
+
+<textarea ref="@editor" onkeyup="@inputChanged" value="@InitialValue" type="text" />
+
+@functions {
+    ElementRef editor;
+
+    [Parameter] protected string InitialValue { get; set; }
+
+    [Parameter] Action<UIChangeEventArgs> OnChange { get; set; }
+
+    async Task<string> GetElementValue(ElementRef elementRef) => await JSRuntime.Current.InvokeAsync<string>("BlazeDown.getValueByElement", elementRef);
+
+    async void inputChanged(UIKeyboardEventArgs args) => OnChange?.Invoke(new UIChangeEventArgs { Type = "change", Value = await GetElementValue(editor) });
+}
