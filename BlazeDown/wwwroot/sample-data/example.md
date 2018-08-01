@@ -140,6 +140,4 @@ The BlazeDown app uses data binding to update the HTML preview when a user enter
 
 Blazor is quite an amazing idea and worthy experiment. It's exciting to see how easy it was to create an experiment like BlazeDown. Using mostly C# and existing .NET libraries, a client-side Markdown editor was created with minimal effort.
 
-While Blazor clearly has flaws, **as one would expect from an early in development experiment**, if Blazor was a matured product and the hacks shown above were not necessary the entire process of creating BlazeDown would have been simple and straight forward. Even with the inconveniences mentioned above, the BlazeDown experiment is quite a success.
-
 It's exciting to see Blazor being built. The community is experimenting right along side the dev team providing feedback, issues and pull request on [the Blazor GitHub repo](https://github.com/aspnet/Blazor).
