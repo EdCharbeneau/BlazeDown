@@ -1,4 +1,4 @@
-﻿window.MsSaveBlob = function (payload, filename) {
+﻿window.msSaveBlob = function (payload, filename) {
 
     const createBlob = data => new Blob([data], { type: "text/csv;charset=utf-8;" });
 

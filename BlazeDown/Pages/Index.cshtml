@@ -57,18 +57,4 @@
         await httpResponse.Content.ReadAsStringAsync() : httpResponse.ReasonPhrase;
     }
 
-    // using bind-Property causes Blazor language services to crash.
-    // Two-way data-binding doesn't seem to work, so I had to manually update ContentValue
-    // https://github.com/aspnet/Blazor/issues/610
-    void OnContentChanged(string newValue)
-    {
-        ContentValue = newValue;
-        StateHasChanged();
-    }
-
-    // ContentChanged textarea should bind to onkeyup instead of onchange, however this is not supported yet.
-    // As a result, the user needs to change the focus away from the textarea to invoke a change.
-    // Interops could probably be used as a fix, but this is an experiment to use Blazor as much as possible without them.
-    // Opinion: If I have to use interops this much, I might as well use JavaScript. We're at version 0.2.0, so no worries, this is just an observation.
-
 }

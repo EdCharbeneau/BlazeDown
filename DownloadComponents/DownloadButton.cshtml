@@ -1,18 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Blazor;
+@using Microsoft.JSInterop;
 
 <a role="button" onclick="@OnClicked" class="ec-btn ec-btn-download">@ChildContent</a>
 
 @functions {
 
-    private void OnClicked(UIMouseEventArgs e)
-    {
-        MsSaveBlobInterop.MsSaveBlob(Payload, FileName);
-    }
+    private void OnClicked(UIMouseEventArgs e) => JSRuntime.Current.InvokeAsync<string>("msSaveBlob", Payload, FileName);
 
     // Content output between <a> child content </a>
     [Parameter] RenderFragment ChildContent { get; set; }
-
-    // Component Properties
 
     /// <summary>
     /// Gets or Sets the data to be downloaded by the client.
