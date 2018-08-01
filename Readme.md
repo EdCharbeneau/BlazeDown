@@ -16,4 +16,4 @@ Thanks to Blazor the app requires no plugins, this is because the code is compil
 
 This experiment was to test out Blazor and see how easy (or difficult) it was to use a .NET Standard library on the client. 
 
-[BlazeDown is available online](http://edcharbeneau.com/BlazeDown/), you can [read about the initial build of BlazeDown](http://edcharbeneau.com/blazedown-with-blazor/) or view the latest version of the BlazeDown source code here on GitHub.
+[BlazeDown is available online](http://edcharbeneau.com/BlazeDown/), you can [read about the building of BlazeDown](http://edcharbeneau.com/blazedown-with-blazor/) or view the latest version of the BlazeDown source code here on GitHub.
