@@ -1,4 +1,0 @@
-C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor\0.4.0\lib\netstandard2.0\Microsoft.AspNetCore.Blazor.dll
-C:\Users\edcha\.nuget\packages\microsoft.aspnetcore.blazor.browser\0.4.0\lib\netstandard2.0\Microsoft.AspNetCore.Blazor.Browser.dll
-C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.dependencyinjection\2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.dll
-C:\Users\edcha\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll

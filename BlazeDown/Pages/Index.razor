@@ -1,0 +1,30 @@
+﻿@page "/"
+@inherits IndexBase
+
+<NavBar>
+    <div class="navbar-form navbar-left">
+        <div class="form-group">
+            <input id="filename" @bind="@FileUrl" type="text" class="form-control" placeholder="http://example.com/myfile.md" />
+        </div>
+        <button @onclick="@OnImportClicked" class="btn btn-primary">Import from URL</button>
+    </div>
+    <div class="navbar-form navbar-right">
+        <DownloadButton Payload="@ContentValue" FileName="BlazeDown.md">Download as MD</DownloadButton>
+    </div>
+</NavBar>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            <span class="label label-default label-hint">Editor</span>
+            <div class="markdown-editor">
+                <Editor OnChange="@TextChanged" InitialValue="@ContentValue" />
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <span class="label label-default label-hint">HTML Preview</span>
+            <div class="markdown-view">
+                <Markdown Content="@ContentValue"></Markdown>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,12 +8,12 @@
         link.setAttribute("download", fileName);
         link.style = "visibility:hidden";
         return link;
-    }
+    };
     const invokeDownload = link => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-    }
+    };
     const isHtmlDownloadAllowed = document.createElement("a").download !== undefined;
     const isSaveBlobAllowed = navigator.msSaveBlob;
 

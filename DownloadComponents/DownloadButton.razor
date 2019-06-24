@@ -1,0 +1,21 @@
+﻿@inject Microsoft.JSInterop.IJSRuntime JsRuntime;
+<a role="button" @onclick="@OnClicked" class="ec-btn ec-btn-download">@ChildContent</a>
+
+@code {
+
+    private void OnClicked() =>
+        JsRuntime.InvokeAsync<string>("msSaveBlob", Payload, FileName);
+
+    // Content output between <a> child content </a>
+    [Parameter] RenderFragment ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or Sets the data to be downloaded by the client.
+    /// </summary>
+    [Parameter] string Payload { get; set; }
+
+    /// <summary>
+    /// Gets or Sets the specified file name.
+    /// </summary>
+    [Parameter] string FileName { get; set; }
+}
