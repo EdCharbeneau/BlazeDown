@@ -1,4 +1,6 @@
-﻿window.msSaveBlob = function (payload, filename) {
+﻿import { isSaveBlobAllowed } from './DownloadHandler.js';
+
+window.msSaveBlob = function (payload, filename) {
 
     const createBlob = data => new Blob([data], { type: "text/csv;charset=utf-8;" });
 
@@ -15,9 +17,9 @@
         document.body.removeChild(link);
     }
     const isHtmlDownloadAllowed = document.createElement("a").download !== undefined;
-    const isSaveBlobAllowed = navigator.msSaveBlob;
+    //const isSaveBlobAllowed = navigator.msSaveBlob;
 
-    isSaveBlobAllowed ? navigator.msSaveBlob(createBlob(payload), filename) :
+    isSaveBlobAllowed() ? navigator.msSaveBlob(createBlob(payload), filename) :
         isHtmlDownloadAllowed ? invokeDownload(buildDownloadLink(createBlob(payload), filename)) :
             console.log("Feature unsupported");
 
