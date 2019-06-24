@@ -4,7 +4,9 @@ Blazor + Markdown = BlazeDown!
 
 ## This is an experiment built on top of an experiment to kick the tires of **Blazor**. 
 
-This is a proof of concept using [Blazor](https://blogs.msdn.microsoft.com/webdev/2018/04/17/blazor-0-2-0-release-now-available/) to create an online Markdown editor.
+**The initial version of BlazeDown was written using Blazor 0.2.** Much has changed in just a few months time and as a result BlazeDown has seen some updates to. This article was updated to reflect how BlazeDown was built using 0.5.1. _The previous version is available here_
+
+This is a proof of concept using [Blazor](https://blogs.msdn.microsoft.com/webdev/2018/07/25/blazor-0-5-0-experimental-release-now-available/) to create an online Markdown editor.
 
 This experiment is in no way intended to be a product, or example of best practices. It's here because it *it's possible* and that's all.
 
@@ -29,11 +31,14 @@ Simply calling MarkDig's `ToHtml` method converts a `string` into Html.
 ```
 @using Markdig;
 
-private string RenderHtmlContent(string value) => Markdig.Markdown.ToHtml(
-markdown: value,
-pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
+private string BuildHtmlFromMarkdown(string value) => Markdig.Markdown.ToHtml(
+    markdown: value,
+    pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
 );
 ```
+
+## Loading External Content
+
 To complete the experiment Blazor was used to load Markdown _.md_ files externally. Once again .NET was leveraged to add the feature without directly jumping into JavaScript by using `System.Net.Http` and `Http.GetAsync`.
 
 The code for using `Http.GetAsync` is quite similar to how it would be used in a typical .NET application. An HttpResponseMessage is created to make the call to the resource using `GetAsync`. Once the response returns, we check to see if the response was successful using `httpResponse.IsSuccessStatusCode`. Finally, the resulting markdown file is returned, or a error message is passed along `await httpResponse.Content.ReadAsStringAsync() : httpResponse.ReasonPhrase`.
@@ -41,23 +46,32 @@ The code for using `Http.GetAsync` is quite similar to how it would be used in a
 While these are all quite familiar routines, it's worth noting that some abstractions may be present in Blazor to invoke JavaScript under the hood to make the actual Http request.
 
 ```
-protected override async Task OnInitAsync()
-{
-    if (Content == null)
-        Content = String.IsNullOrEmpty(FromUrl) ?
-            "Content or FromUrl property is not set or invalid" : await InitContentFromUrl();
-}
+    public string FileUrl { get; set; }
+    public string ContentValue { get; set; }
 
-private async Task<string> InitContentFromUrl()
-{
-    HttpResponseMessage httpResponse = await Http.GetAsync(FromUrl);
-    return httpResponse.IsSuccessStatusCode ?
-    await httpResponse.Content.ReadAsStringAsync() : httpResponse.ReasonPhrase;
-}
+    protected async override Task OnInitAsync()
+    {
+        ContentValue = await GetContentFromUrl("/sample-data/example.md");
+        StateHasChanged();
+    }
+
+    private async void OnClicked(UIMouseEventArgs e)
+    {
+        ContentValue = await GetContentFromUrl(FileUrl);
+        StateHasChanged();
+    }
+
+    private async Task<string> GetContentFromUrl(string path)
+    {
+        HttpResponseMessage httpResponse = await Http.GetAsync(path);
+        return httpResponse.IsSuccessStatusCode ?
+        await httpResponse.Content.ReadAsStringAsync() : httpResponse.ReasonPhrase;
+    }
+
 ```
 ### The Component
 
-To fully experience what Blazor has to offer in its current state, the Blazor component model was used to create a `<Markdown>` component. The component is capable of receiving a simple string, or fetching data from an external resource.
+To fully experience what Blazor has to offer in its current state, the Blazor component model was used to create a `<Markdown>` component. The component is capable of receiving a simple string (markdown) and coverting it to HTML.
 
 The `Content` property is used to set a simple string as the Markdown to render as HTML.
 
@@ -67,19 +81,9 @@ _output_
 
 ```<h1>Hello World</h1>```
 
-The `FromUrl` property defines a URL for the component to fetch data from.
-
-```<Markdown Content="/helloworld.md">```
-
-_output fetched via Http_
-
-```<h1>Hello World</h1>```
-
 Blazor's component model follows similar principals to modern JavaScript frameworks like Angular. Each component has a HTML template, in the case of Blazor we use Razor's .cshtml format. In addtion to the template, the components code is encapsulated with the component as C#.
 
 The Markdown component's structure is pretty straight forward. The properties and methods of the component are bound and rendered using Razor. By making Content and FromUrl public properties, these values are recognized as component properties when we write `<Markdown PropertyName`.
-
-When the component is created it needs to fetch an a resource if one is defined in the `FromUrl` property. Telling Blazor to initialize a fetch when the component loads is as simple as overriding the `OnInitAsync` behavior from the component's base class.
 
 ```
 // Markdown.cshtml
@@ -89,140 +93,51 @@ When the component is created it needs to fetch an a resource if one is defined 
 }
 else
 {
-    <div id="markdown-component">
-        <!-- Omitted for further explination -->
-		@RenderHtml()
-    </div>
+    @((MarkupString)BuildHtmlFromMarkdown(Content))
 }
 
-    public string Content { get; set; }
-    public string FromUrl { get; set; }
+@functions {
 
-    protected override async Task OnInitAsync()
-    {
-        if (String.IsNullOrEmpty(Content))
-            Content = String.IsNullOrEmpty(FromUrl) ?
-                "Content or FromUrl property is not set or invalid" : await InitContentFromUrl();
-    }
+[Parameter]
+string Content { get; set; }
 
-    private async Task<string> InitContentFromUrl()
-    {
-        HttpResponseMessage httpResponse = await Http.GetAsync(FromUrl);
-        return httpResponse.IsSuccessStatusCode ?
-        await httpResponse.Content.ReadAsStringAsync() : httpResponse.ReasonPhrase;
-    }
-
-    private string RenderHtmlContent() => Markdig.Markdown.ToHtml(
-        markdown: Content,
-        pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
-    );
+private string BuildHtmlFromMarkdown(string value) => Markdig.Markdown.ToHtml(
+    markdown: value,
+    pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
+);
 ```
 The code above represents the **ideal** code for the component. 
 
-### The Bad Parts
+### Update: Blazor 0.5.1 release 
 
-The ideal code mentioned above required quite a few hacks, remember that this is a 0.2.0 release and Blazor is very early in development. Browsing the source code on GitHub will reveal that much more is going on behind the scenes.
+Before Blazor 0.5.1, there was no method for rendering raw HTML and BlazeDown was forced to use unconventional hacks to implement the feature. With the release of 0.5.1 the type `MarkupString` was added to facilitate rendering HTML directly using Blazor. _WARNING: Rendering raw HTML constructed from any untrusted source is a major security risk!_
 
-**Rendering Raw HTML**
-
-The first major issue is that Raw Html cannot be rendered with Blazor. This means when MarkDig calls `ToHtml` the literal HTML is rendered on screen as string, ex: `<h1>Even the H1 tags are visible</h1>`. In order to make Raw HTML render properly two methods are used.
-
-First, an ugly hack is needed to display the HTML when the component is initialized. Since the DOM hasn't rendered yet, we can't even properly use JavaScript to combat this issue. The actual code attaches to the `onerror` event of an image to forcing the HTML to render via JavaScript.
+Rendering the HTML parsed from MarkDig to the component's view is a simple as casting the HTML results from `BuildHtmlFromMarkdown` to a `MarkupString`.
 
 ```
-// This is a totally hacky way to get HTML injected on the page until https://github.com/aspnet/Blazor/issues/167 is resolved
-<div>
-    <img src="" onerror="(function (e) { e.parentElement.innerHTML = '@HttpUtility.JavaScriptStringEncode(RenderHtmlContent())'; })(this)" />
-</div>
+@((MarkupString)BuildHtmlFromMarkdown(Content))
 ```
-
-Second, when the `Content` property is set, JavaScript is called via interop to find our component's container to render the HTML directly to the DOM.
-
-```
-public string Content
-{
-    get { return content; }
-    set
-    {
-        content = value;
-        if(isComponentInitialized)
-            // Once this issue is fixed https://github.com/aspnet/Blazor/issues/167
-            // then the interop will no longer be needed. This will also take care of that lame <img hack in the markup above.
-            // Once raw HTML output is available, the component will simply use RenderHtmlContent function directly from Razor.
-            HtmlRendererInterop.RenderMarkdownAsHtml(RenderHtmlContent(value));
-    }
-}
-```
-
-```
-Blazor.registerFunction('MarkdownComponent.HtmlRendererInterop.RenderMarkdown', function (message) {
-   
-    let el = document.getElementById("markdown-component");
-    if (el) { el.innerHTML = message; }
-    else {
-        console.log("HTML not rendered");
-    }
-});
-
-```
-
-While ugly and quite cool at the same time, it's necessary. Blazor still has a lot of work to eliminate the need for interop and quirky hacks like these.
-
 ### Data Binding in Blazor
 
-In addition to the rendering hacks, data binding is still quite new and changing in 0.2.0. Data binding works in Blazor by simple conventions that are quite easy to understand and implement.
-
-Here's the example shown in the MSDN article celebrating the [0.2.0 release](https://blogs.msdn.microsoft.com/webdev/2018/04/17/blazor-0-2-0-release-now-available/).
-
+The BlazeDown app uses data binding to update the HTML preview when a user enters content in a `<textarea>` on the page. By binding `<textarea>` and `<Markdown>` components together, the online-markdown-editor experience is completed. To ensure the data is always updated when the textarea's value is changed two-way data binding is used. Using the `bind` attribute on the `<textarea>` the data `ContentValue` is bound to the `value` of the `<textarea>`, in addition it is automatically updated when the textarea's `onchange` event is raised.
 
 ```
-@* in Counter.cshtml *@
-<div>...html omitted for brevity...</div>
-@functions {
-    public int Value { get; set; } = 1;
-    public Action<int> ValueChanged { get; set; }
-}
-
-@* in another file *@
-<Counter bind-Value="@CurrentValue" />
-@functions {
-    public int CurrentValue { get; set; }
-}
-```
-
-The BlazeDown app uses data binding to update the HTML preview when a user enters content in a `<textarea>` on the page. By binding `<textarea>` and `<Markdown>` components together, the online-markdown-editor experience is completed.
-
-It's worth noting that the data binding in current release don't use the conventions added in 0.2.0. At the time of writing this worked with some exceptions (uncaught exceptions). Using the bind-Property convention outlined above caused [Visual Studio to crash](https://github.com/aspnet/Blazor/issues/597). In addition, the data binding [didn't appear to work in a two-way binding](https://github.com/aspnet/Blazor/issues/610) scenario. Eventually this binding method was avoided and a more implicit approach was used.
-
-```
-<div class="row">
-    <div class="col-sm-6">
-        <div class="markdown-editor">
-            <textarea bind="@ContentValue" />
-        </div>
+<div class="col-sm-6">
+    <span class="label label-default label-hint">Editor</span>
+    <div class="markdown-editor">
+        <textarea bind="@ContentValue" />
     </div>
-    <div class="col-sm-6">
-        <div class="markdown-view">
-            <Markdown Content="@ContentValue" ContentChanged="@OnContentChanged" FromUrl="/sample-data/example.md"></Markdown>
-        </div>
+</div>
+<div class="col-sm-6">
+    <span class="label label-default label-hint">HTML Preview</span>
+    <div class="markdown-view">
+        <Markdown Content="@ContentValue"></Markdown>
     </div>
 </div>
 
-
-@functions {
-    public string ContentValue { get; set; }
-
-    void OnContentChanged(string newValue)
-    {
-        ContentValue = newValue;
-        StateHasChanged();
-    }
-}
 ```
 ## Conclusion
 
 Blazor is quite an amazing idea and worthy experiment. It's exciting to see how easy it was to create an experiment like BlazeDown. Using mostly C# and existing .NET libraries, a client-side Markdown editor was created with minimal effort.
-
-While Blazor clearly has flaws, **as one would expect from an early in development experiment**, if Blazor was a matured product and the hacks shown above were not necessary the entire process of creating BlazeDown would have been simple and straight forward. Even with the inconveniences mentioned above, the BlazeDown experiment is quite a success.
 
 It's exciting to see Blazor being built. The community is experimenting right along side the dev team providing feedback, issues and pull request on [the Blazor GitHub repo](https://github.com/aspnet/Blazor).
