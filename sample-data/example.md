@@ -4,10 +4,6 @@ Blazor + Markdown = BlazeDown!
 
 ## This is an experiment built on top of an experiment to kick the tires of **Blazor**. 
 
-**The initial version of BlazeDown was written using Blazor 0.2.** Much has changed in just a few months time and as a result BlazeDown has seen some updates to. This article was updated to reflect how BlazeDown was built using 0.5.1. _The previous version is available here_
-
-This is a proof of concept using [Blazor](https://blogs.msdn.microsoft.com/webdev/2018/07/25/blazor-0-5-0-experimental-release-now-available/) to create an online Markdown editor.
-
 This experiment is in no way intended to be a product, or example of best practices. It's here because it *it's possible* and that's all.
 
 ## Client Side C#
@@ -69,73 +65,7 @@ While these are all quite familiar routines, it's worth noting that some abstrac
     }
 
 ```
-### The Component
 
-To fully experience what Blazor has to offer in its current state, the Blazor component model was used to create a `<Markdown>` component. The component is capable of receiving a simple string (markdown) and coverting it to HTML.
-
-The `Content` property is used to set a simple string as the Markdown to render as HTML.
-
-```<Markdown Content="# Hello World">```
-
-_output_
-
-```<h1>Hello World</h1>```
-
-Blazor's component model follows similar principals to modern JavaScript frameworks like Angular. Each component has a HTML template, in the case of Blazor we use Razor's .cshtml format. In addtion to the template, the components code is encapsulated with the component as C#.
-
-The Markdown component's structure is pretty straight forward. The properties and methods of the component are bound and rendered using Razor. By making Content and FromUrl public properties, these values are recognized as component properties when we write `<Markdown PropertyName`.
-
-```
-// Markdown.cshtml
-@if (Content == null)
-{
-    <span>Loading...</span>
-}
-else
-{
-    @((MarkupString)BuildHtmlFromMarkdown(Content))
-}
-
-@functions {
-
-[Parameter]
-string Content { get; set; }
-
-private string BuildHtmlFromMarkdown(string value) => Markdig.Markdown.ToHtml(
-    markdown: value,
-    pipeline: new MarkdownPipelineBuilder().UseAdvancedExtensions().Build()
-);
-```
-The code above represents the **ideal** code for the component. 
-
-### Update: Blazor 0.5.1 release 
-
-Before Blazor 0.5.1, there was no method for rendering raw HTML and BlazeDown was forced to use unconventional hacks to implement the feature. With the release of 0.5.1 the type `MarkupString` was added to facilitate rendering HTML directly using Blazor. _WARNING: Rendering raw HTML constructed from any untrusted source is a major security risk!_
-
-Rendering the HTML parsed from MarkDig to the component's view is a simple as casting the HTML results from `BuildHtmlFromMarkdown` to a `MarkupString`.
-
-```
-@((MarkupString)BuildHtmlFromMarkdown(Content))
-```
-### Data Binding in Blazor
-
-The BlazeDown app uses data binding to update the HTML preview when a user enters content in a `<textarea>` on the page. By binding `<textarea>` and `<Markdown>` components together, the online-markdown-editor experience is completed. To ensure the data is always updated when the textarea's value is changed two-way data binding is used. Using the `bind` attribute on the `<textarea>` the data `ContentValue` is bound to the `value` of the `<textarea>`, in addition it is automatically updated when the textarea's `onchange` event is raised.
-
-```
-<div class="col-sm-6">
-    <span class="label label-default label-hint">Editor</span>
-    <div class="markdown-editor">
-        <textarea bind="@ContentValue" />
-    </div>
-</div>
-<div class="col-sm-6">
-    <span class="label label-default label-hint">HTML Preview</span>
-    <div class="markdown-view">
-        <Markdown Content="@ContentValue"></Markdown>
-    </div>
-</div>
-
-```
 ## Conclusion
 
 Blazor is quite an amazing idea and worthy experiment. It's exciting to see how easy it was to create an experiment like BlazeDown. Using mostly C# and existing .NET libraries, a client-side Markdown editor was created with minimal effort.
